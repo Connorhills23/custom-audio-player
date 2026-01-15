@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+    <title>Interaction with Audio and Video Elements</title>
+  </head>
+  <body>
+    <div>
+      <audio id="audio" src="./audio/Bangersong.mp3"></audio>
+    </div>
+    <div>
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="stop">Stop</button>
+      <button id="skipForward">+10s</button>
+      <button id="skipBackward">-10's</button>
+      <button id="skip-button">Skip Song</button>
+
+      <p>Now Playing: <span id="song-title">Song 1</span></p>
+      
+      <h1>&#128266 VOLUME &#128266</h1>
+    </div>
+    <div class="slidecontainer">
+      <input
+        type="range"
+        id="vol"
+        name="vol"
+        min="1"
+        max="100"
+        class="slider"
+      />
+      
+    </div>
+  </body>
+</html>
