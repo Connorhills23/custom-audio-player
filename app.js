@@ -1,40 +1,12 @@
-console.log("Testing..");
-
 const audio = document.getElementById("audio");
 const playBtn = document.getElementById("play");
-const stopBtn = document.getElementById("stop");
 const pauseBtn = document.getElementById("pause");
+const stopBtn = document.getElementById("stop");
 const skipForward = document.getElementById("skipForward");
 const skipBack = document.getElementById("skipBackward");
-
-playBtn.addEventListener("click", function () {
-  console.log("Hello");
-  audio.play();
-});
-
-pauseBtn.addEventListener("click", function () {
-  audio.pause();
-});
-
-stopBtn.addEventListener("click", function () {
-  audio.pause();
-  audio.currentTime = 0;
-});
-
-skipForward.addEventListener("click", function () {
-  audio.currentTime = audio.currentTime + 10;
-  audio.currentTime += 10;
-});
-
-skipBack.addEventListener("click", function () {
-  audio.currentTime -= 10;
-});
-
-let audioVolume = document.getElementById("vol");
-
-audioVolume.addEventListener("input", function () {
-  audio.volume = +audioVolume.value / 100;
-});
+const audioVolume = document.getElementById("vol");
+const songTitleEl = document.getElementById("song-title");
+const playlistContainer = document.getElementById("playlist-container");
 
 const playlist = [
   { src: "./audio/Culture-Club.mp3", title: "Culture-Club" },
@@ -43,17 +15,16 @@ const playlist = [
     title: "Led Zeppelin - Whole Lotta Love",
   },
   {
-    src: "./audio/Michael Jackson - They Donâ__t Care About Us.mp3",
-    title: "Michael Jackson - They Donâ__t Care About Us",
+    src: "./audio/Michael Jackson - They Don't Care About Us.mp3",
+    title: "Michael Jackson - They Don't Care About Us",
   },
   {
     src: "./audio/AC_DC - Highway to Hell.mp3",
-    title: "AC_DC - Highway to Hell",
+    title: "AC/DC - Highway to Hell",
   },
   {
     src: "./audio/Where Have You Been x Heaven Takes You Home x Highest In The Room - Mashup.mp3",
-    title:
-      "Where Have You Been x Heaven Takes You Home x Highest In The Room - Mashup",
+    title: "Mashup",
   },
   {
     src: "./audio/Gold Digger x Macarena (Mashup).mp3",
@@ -66,37 +37,69 @@ const playlist = [
   },
   {
     src: "./audio/Don't You Worry Child x Many - Mashup by Guy.mp3",
-    title: "Don't You Worry Child x Many - Mashup by Guy",
+    title: "Don't You Worry Child x Many - Mashup",
   },
   {
     src: "./audio/The Nights x Paradise (Mashup) - Avicii, Coldplay.mp3",
-    title: "The Nights x Paradise (Mashup) - Avicii, Coldplay",
+    title: "The Nights x Paradise (Mashup)",
   },
   { src: "./audio/Bangersong.mp3", title: "Bangers" },
 ];
 
 let currentTrackIndex = 0;
-const skipButton = document.getElementById("skip-button");
-const songTitleEl = document.getElementById("song-title");
 
+// Load track and highlight in playlist
 function loadTrack(index) {
   if (index >= 0 && index < playlist.length) {
     currentTrackIndex = index;
     audio.src = playlist[currentTrackIndex].src;
     songTitleEl.textContent = playlist[currentTrackIndex].title;
 
+    // Highlight active track in playlist
+    document.querySelectorAll("#playlist-container li").forEach((li, i) => {
+      li.classList.toggle("active", i === index);
+    });
+
     audio.play();
   }
 }
 
-function skipSong() {
-  if (currentTrackIndex < playlist.length - 1) {
-    loadTrack(currentTrackIndex + 1);
-  } else {
-    loadTrack(0);
-  }
-}
+// Play/Pause/Stop
+playBtn.addEventListener("click", () => audio.play());
+pauseBtn.addEventListener("click", () => audio.pause());
+stopBtn.addEventListener("click", () => {
+  audio.pause();
+  audio.currentTime = 0;
+});
 
-skipButton.addEventListener("click", skipSong);
-audio.addEventListener("ended", skipSong);
+// Skip forward/back
+skipForward.addEventListener(
+  "click",
+  () => (audio.currentTime = Math.min(audio.currentTime + 10, audio.duration))
+);
+skipBack.addEventListener(
+  "click",
+  () => (audio.currentTime = Math.max(audio.currentTime - 10, 0))
+);
+
+// Volume control
+audioVolume.addEventListener(
+  "input",
+  () => (audio.volume = Math.min(Math.max(audioVolume.value / 100, 0), 1))
+);
+
+// Skip to next track when current ends
+audio.addEventListener("ended", () => {
+  loadTrack((currentTrackIndex + 1) % playlist.length);
+});
+
+// Populate playlist UI
+playlist.forEach((track, index) => {
+  const li = document.createElement("li");
+  li.textContent = track.title;
+  li.addEventListener("click", () => loadTrack(index));
+  playlistContainer.appendChild(li);
+});
+
+// Initial load
 loadTrack(currentTrackIndex);

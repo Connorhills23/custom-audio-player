@@ -131,3 +131,23 @@ input {
   font-size: 12px;
   text-shadow: 2px 2px #000;
 }
+
+#playlist-container {
+  list-style: none;
+  padding: 0;
+}
+
+#playlist-container li {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+#playlist-container li:hover {
+  background-color: #f0f0f0;
+}
+
+#playlist-container li.active {
+  background-color: #d0e0ff;
+  font-weight: bold;
+}
